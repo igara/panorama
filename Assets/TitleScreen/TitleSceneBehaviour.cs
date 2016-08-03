@@ -20,6 +20,8 @@ public class TitleSceneBehaviour : MonoBehaviour {
 	 * フレーム毎に一度実行されるメソッド
 	 */
 	void Update () {
+		this.transform.Rotate ( 0, ( Input.GetAxis ("Horizontal") * 1 ), 0 );
+		this.transform.Rotate ( ( Input.GetAxis ("Vertical") * 1 ), 0, 0 );
 	}
 
 	/**
