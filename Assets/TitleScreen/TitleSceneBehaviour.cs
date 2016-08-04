@@ -4,9 +4,21 @@ using System.Collections;
 public class TitleSceneBehaviour : MonoBehaviour {
 
 	/**
+	 * @var Vector3 vector カメラの座標
+	 */
+	private Vector3 vector;
+	/**
+	 * @var GameObject plane 床
+	 */
+	private GameObject plane;
+
+	/**
 	 * インスタンス生成された時のみ実行されるメソッド
 	 */
 	void Awake () {
+		vector = new Vector3(0, 1.5f, 0);
+		transform.position = vector;
+		plane = GameObject.Find("Plane");
 	}
 
 	/**
@@ -20,8 +32,15 @@ public class TitleSceneBehaviour : MonoBehaviour {
 	 * フレーム毎に一度実行されるメソッド
 	 */
 	void Update () {
-		this.transform.Rotate ( 0, ( Input.GetAxis ("Horizontal") * 1 ), 0 );
-		this.transform.Rotate ( ( Input.GetAxis ("Vertical") * 1 ), 0, 0 );
+		// ↑↓キーで上下の角度を変更する
+		transform.Rotate (Input.GetAxis ("Vertical") * 1, 0, 0);
+		// ←→キーで床を回転する
+		plane.transform.Rotate (0, Input.GetAxis ("Horizontal") * 1, 0);
+		if (Input.GetAxis ("Mouse Y") != 0) {
+			// カメラの高さをマウスの上下で変更する
+			vector.y = vector.y + Input.GetAxis ("Mouse Y") * 1;
+		}
+		transform.position = vector;
 	}
 
 	/**
