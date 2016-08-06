@@ -1,50 +1,30 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Service.ScreenAutorotateSetting;
 
 public class SmartBehaviour : MonoBehaviour {
+
+	/**
+	 * @var ScreenAutorotateSetting screenAutorotateSetting 画面の回転制御
+	 */
+	private ScreenAutorotateSetting screenAutorotateSetting = new ScreenAutorotateSetting();
 
 	/**
 	 * @var GameObject main_camera カメラ
 	 */
 	private GameObject main_camera;
 
-	private Gyroscope gyro;
-
-	private Quaternion quaternionMulti;
-	private Quaternion quaternionMap;
-
 	/**
 	 * インスタンス生成された時のみ実行されるメソッド
 	 */
 	void Awake () {
 		#if UNITY_IPHONE || UNITY_ANDROID
-			gyro = Input.gyro;
-			gyro.enabled = true;
+			// ジャイロセンサを有効
+			Input.gyro.enabled = true;
+			// コンパスを有効
+			Input.compass.enabled = true;
+			// MainCameraという名前のGameObjectを取得
 			main_camera = GameObject.Find ("MainCamera");
-		#endif
-		#if UNITY_IPHONE
-			main_camera.transform.eulerAngles = new Vector3(90,90,0);
-			if (Screen.orientation == ScreenOrientation.LandscapeLeft) {
-				quaternionMulti = new Quaternion(0f,0,0.7071f,0.7071f);
-			} else if (Screen.orientation == ScreenOrientation.LandscapeRight) {
-				quaternionMulti = new Quaternion(0,0,-0.7071f,0.7071f);
-			} else if (Screen.orientation == ScreenOrientation.Portrait) {
-				quaternionMulti = new Quaternion(0,0,1,0);
-			} else if (Screen.orientation == ScreenOrientation.PortraitUpsideDown) {
-				quaternionMulti = new Quaternion(0,0,0,1);
-			}
-		#endif
-		#if UNITY_ANDROID
-		main_camera.transform.eulerAngles = new Vector3(-90,0,0);
-			if (Screen.orientation == ScreenOrientation.LandscapeLeft) {
-				quaternionMulti = new Quaternion(0f,0,0.7071f,-0.7071f);
-			} else if (Screen.orientation == ScreenOrientation.LandscapeRight) {
-				quaternionMulti = new Quaternion(0,0,-0.7071f,-0.7071f);
-			} else if (Screen.orientation == ScreenOrientation.Portrait) {
-				quaternionMulti = new Quaternion(0,0,0,1);
-			} else if (Screen.orientation == ScreenOrientation.PortraitUpsideDown) {
-				quaternionMulti = new Quaternion(0,0,1,0);
-			}
 		#endif
 	}
 
@@ -59,14 +39,10 @@ public class SmartBehaviour : MonoBehaviour {
 	 * フレーム毎に一度実行されるメソッド
 	 */
 	void Update () {
-		#if UNITY_IPHONE
-			quaternionMap = gyro.attitude;
+		#if UNITY_ANDROID || UNITY_IPHONE
+			// ジャイロの角度を適応させる
+			main_camera.transform.localRotation = Quaternion.Euler (90, 0, -180) * Input.gyro.attitude * Quaternion.Euler(0, 0, 180);
 		#endif
-		#if UNITY_ANDROID
-			quaternionMap = new Quaternion(gyro.attitude.w,gyro.attitude.x,gyro.attitude.y,gyro.attitude.z);
-		#endif
-		main_camera.transform.localRotation = quaternionMap * quaternionMulti;
-
 	}
 
 	/**
@@ -79,11 +55,17 @@ public class SmartBehaviour : MonoBehaviour {
 	 * Behaviour が有効/アクティブになったときに呼び出される 
 	 */
 	void OnEnable() {
+		// 画面の回転を許可しない
+		screenAutorotateSetting.setAutorotateSwichFalse();
+		// immersiveモードを解除
+		Screen.fullScreen = false;
 	}
 
 	/**
 	 * Behaviour が無効/非アクティブになったときに呼び出される 
 	 */
 	void OnDisable() {
+		// 画面の回転を許可する
+		screenAutorotateSetting.setAutorotateSwichTrue();
 	}
 }

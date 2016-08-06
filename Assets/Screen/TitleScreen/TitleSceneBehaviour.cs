@@ -74,6 +74,6 @@ public class TitleSceneBehaviour : MonoBehaviour {
 	 */
 	public void OnSwichButton() {
 		// SmartScene画面に遷移させる
-		SceneManager.LoadScene("SmartScreen/SmartScene");
+		SceneManager.LoadScene("Screen/SmartScreen/SmartScene");
 	}
 }
