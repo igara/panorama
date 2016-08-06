@@ -15,9 +15,9 @@ public class TitleSceneBehaviour : MonoBehaviour {
 	private GameObject plane;
 
 	/**
-	 * @var GameObject camera カメラ
+	 * @var GameObject main_camera カメラ
 	 */
-	private GameObject camera;
+	private GameObject main_camera;
 
 	/**
 	 * インスタンス生成された時のみ実行されるメソッド
@@ -26,7 +26,7 @@ public class TitleSceneBehaviour : MonoBehaviour {
 		vector = new Vector3(0, 1.5f, 0);
 		transform.position = vector;
 		plane = GameObject.Find("Plane");
-		camera = GameObject.Find ("MainCamera");
+		main_camera = GameObject.Find ("MainCamera");
 	}
 
 	/**
@@ -41,14 +41,14 @@ public class TitleSceneBehaviour : MonoBehaviour {
 	 */
 	void Update () {
 		// ↑↓キーで上下の角度を変更する
-		camera.transform.Rotate (Input.GetAxis ("Vertical") * 1, 0, 0);
+		main_camera.transform.Rotate (Input.GetAxis ("Vertical") * 1, 0, 0);
 		// ←→キーで床を回転する
 		plane.transform.Rotate (0, Input.GetAxis ("Horizontal") * 1, 0);
 		if (Input.GetAxis ("Mouse Y") != 0) {
 			// カメラの高さをマウスの上下で変更する
 			vector.y = vector.y + Input.GetAxis ("Mouse Y") * 1;
 		}
-		camera.transform.position = vector;
+		main_camera.transform.position = vector;
 	}
 
 	/**
