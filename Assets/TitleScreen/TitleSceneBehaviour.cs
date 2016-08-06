@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class TitleSceneBehaviour : MonoBehaviour {
 
@@ -7,10 +8,16 @@ public class TitleSceneBehaviour : MonoBehaviour {
 	 * @var Vector3 vector カメラの座標
 	 */
 	private Vector3 vector;
+
 	/**
 	 * @var GameObject plane 床
 	 */
 	private GameObject plane;
+
+	/**
+	 * @var GameObject camera カメラ
+	 */
+	private GameObject camera;
 
 	/**
 	 * インスタンス生成された時のみ実行されるメソッド
@@ -19,6 +26,7 @@ public class TitleSceneBehaviour : MonoBehaviour {
 		vector = new Vector3(0, 1.5f, 0);
 		transform.position = vector;
 		plane = GameObject.Find("Plane");
+		camera = GameObject.Find ("MainCamera");
 	}
 
 	/**
@@ -33,14 +41,14 @@ public class TitleSceneBehaviour : MonoBehaviour {
 	 */
 	void Update () {
 		// ↑↓キーで上下の角度を変更する
-		transform.Rotate (Input.GetAxis ("Vertical") * 1, 0, 0);
+		camera.transform.Rotate (Input.GetAxis ("Vertical") * 1, 0, 0);
 		// ←→キーで床を回転する
 		plane.transform.Rotate (0, Input.GetAxis ("Horizontal") * 1, 0);
 		if (Input.GetAxis ("Mouse Y") != 0) {
 			// カメラの高さをマウスの上下で変更する
 			vector.y = vector.y + Input.GetAxis ("Mouse Y") * 1;
 		}
-		transform.position = vector;
+		camera.transform.position = vector;
 	}
 
 	/**
@@ -59,5 +67,13 @@ public class TitleSceneBehaviour : MonoBehaviour {
 	 * Behaviour が無効/非アクティブになったときに呼び出される 
 	 */
 	void OnDisable() {
+	}
+
+	/**
+	 * Swichボタンを押下した時
+	 */
+	public void OnSwichButton() {
+		// SmartScene画面に遷移させる
+		SceneManager.LoadScene("SmartScreen/SmartScene");
 	}
 }
