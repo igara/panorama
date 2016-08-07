@@ -39,7 +39,11 @@ public class SmartBehaviour : MonoBehaviour {
 	 * フレーム毎に一度実行されるメソッド
 	 */
 	void Update () {
-		#if UNITY_ANDROID || UNITY_IPHONE
+		#if UNITY_ANDROID
+			// ジャイロの角度を適応させる
+			main_camera.transform.localRotation = Quaternion.Euler (90, 180, -180) * Input.gyro.attitude * Quaternion.Euler(0, 0, 180);
+		#endif
+		#if UNITY_IPHONE
 			// ジャイロの角度を適応させる
 			main_camera.transform.localRotation = Quaternion.Euler (90, 0, -180) * Input.gyro.attitude * Quaternion.Euler(0, 0, 180);
 		#endif
